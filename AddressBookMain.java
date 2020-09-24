@@ -61,8 +61,19 @@ class AddressBookService {
         return true;
     }
 
+    public boolean deleteContact(String name) {
+        int index = searchByName(name);
+        if (index == -1)
+            return false;
+        contactList.remove(index);
+        return true;
+    }
+
     @Override
     public String toString() {
+        if (contactList.isEmpty())
+            return "No contacts found!";
+
         StringBuilder sBuilder = new StringBuilder();
         for (Contacts contacts : contactList)
             sBuilder.append(contacts.toString() + "\n");
@@ -108,6 +119,15 @@ public class AddressBookMain {
             System.out.println("NOT FOUND!");
         else
             book.editContact(name, readContact(sc));
+        System.out.println(book.toString());
+
+        System.out.println("Enter name to delete: ");
+        name = sc.nextLine();
+        if (book.searchByName(name) == -1)
+            System.out.println("NOT FOUND!");
+        else
+            book.deleteContact(name);
+
         System.out.println(book.toString());
 
     }
