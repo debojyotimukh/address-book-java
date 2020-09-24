@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Scanner;
 
 class Contacts {
@@ -104,17 +107,14 @@ public class AddressBookMain {
         return new Contacts(fName, lName, address, city, state, zip, phone, email);
     }
 
-    public static void main(String[] args) {
-
-        Scanner sc = new Scanner(System.in);
-        AddressBookService book = new AddressBookService();
-
+    private static void addressBookOps(AddressBookService book, Scanner sc) {
         while (true) {
             System.out.println("\n\nWelcome to Address Book Program");
             System.out.println("1. Add Contact");
             System.out.println("2. Edit Contact");
             System.out.println("3. Delete Contact");
             System.out.println("4. Print Address Book");
+            System.out.println("5. Back");
             System.out.print("Your choice: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -141,11 +141,60 @@ public class AddressBookMain {
                 case 4:
                     System.out.println(book.toString());
                     break;
+                case 5:
+                    return;
                 default:
                     System.out.println("Invalid Choice!");
                     break;
             }
         }
 
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        
+        Dictionary<String, AddressBookService> library = new Hashtable<>();
+        while (true) {
+            System.out.println("\n\nWelcome to Address Book Program");
+            System.out.println("1. New Address Book");
+            System.out.println("2. Select Book");
+            System.out.println("3. Delete Book");
+            System.out.println("4. Quit");
+            System.out.print("Your choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice) {
+                case 1:
+                    System.out.println("Name of new address book: ");
+                    String bookName = sc.next();
+                    sc.nextLine();
+                    library.put(bookName, new AddressBookService());
+                    addressBookOps(library.get(bookName), sc);
+                    break;
+                case 2:
+                    System.out.println("Availble books are: ");
+                    for (Enumeration<String> i = library.keys(); i.hasMoreElements();) {
+                        System.out.println(i.nextElement() + ",");
+                    }
+                    System.out.println("Open Book: ");
+                    String name = sc.nextLine();
+                    System.out.println("Current: "+name);
+                    addressBookOps(library.get(name), sc);
+                    break;
+                case 3:
+                    System.out.println("Enter name to delete: ");
+                    name = sc.nextLine();
+                    library.remove(name);
+                    break;
+                case 4:
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid Choice!");
+                    break;
+            }
+        }
     }
 }
