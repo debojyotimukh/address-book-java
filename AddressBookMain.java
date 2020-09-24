@@ -29,6 +29,14 @@ class Contacts {
                 + email;
     }
 
+    public String getfName() {
+        return fName;
+    }
+
+    public void setfName(String fName) {
+        this.fName = fName;
+    }
+
 }
 
 class AddressBookService {
@@ -38,12 +46,27 @@ class AddressBookService {
         contactList.add(contact);
     }
 
+    public int searchByName(String name) {
+        for (Contacts contact : contactList)
+            if (contact.getfName().equalsIgnoreCase(name))
+                return contactList.indexOf(contact);
+        return -1;
+    }
+
+    public boolean editContact(String name, Contacts modified) {
+        int index = searchByName(name);
+        if (index == -1)
+            return false;
+        contactList.set(index, modified);
+        return true;
+    }
+
     @Override
-    public String toString(){
-        StringBuilder sBuilder=new StringBuilder();
-        for(Contacts contacts:contactList)
-            sBuilder.append(contacts.toString()+"\n");
-        
+    public String toString() {
+        StringBuilder sBuilder = new StringBuilder();
+        for (Contacts contacts : contactList)
+            sBuilder.append(contacts.toString() + "\n");
+
         return sBuilder.toString();
     }
 }
@@ -51,9 +74,9 @@ class AddressBookService {
 public class AddressBookMain {
     private static Contacts readContact(Scanner sc) {
         System.out.println("FIRST NAME: ");
-        String fName = sc.next();
+        String fName = sc.nextLine();
         System.out.println("LAST NAME: ");
-        String lName = sc.next();
+        String lName = sc.nextLine();
         System.out.println("ADDRESS: ");
         String address = sc.nextLine();
         System.out.println("CITY: ");
@@ -61,11 +84,11 @@ public class AddressBookMain {
         System.out.println("STATE: ");
         String state = sc.nextLine();
         System.out.println("ZIP: ");
-        String zip = sc.next();
+        String zip = sc.nextLine();
         System.out.println("PHONE NUMBER: ");
-        String phone = sc.next();
+        String phone = sc.nextLine();
         System.out.println("EMAIL ADDRESS: ");
-        String email = sc.next();
+        String email = sc.nextLine();
 
         return new Contacts(fName, lName, address, city, state, zip, phone, email);
     }
@@ -78,5 +101,14 @@ public class AddressBookMain {
         book.addContact(readContact(sc));
 
         System.out.println(book.toString());
+
+        System.out.println("Enter name to edit: ");
+        String name = sc.nextLine();
+        if (book.searchByName(name) == -1)
+            System.out.println("NOT FOUND!");
+        else
+            book.editContact(name, readContact(sc));
+        System.out.println(book.toString());
+
     }
 }
