@@ -105,30 +105,47 @@ public class AddressBookMain {
     }
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Address Book Program");
+
         Scanner sc = new Scanner(System.in);
         AddressBookService book = new AddressBookService();
 
-        book.addContact(readContact(sc));
-
-        System.out.println(book.toString());
-
-        System.out.println("Enter name to edit: ");
-        String name = sc.nextLine();
-        if (book.searchByName(name) == -1)
-            System.out.println("NOT FOUND!");
-        else
-            book.editContact(name, readContact(sc));
-        System.out.println(book.toString());
-
-        System.out.println("Enter name to delete: ");
-        name = sc.nextLine();
-        if (book.searchByName(name) == -1)
-            System.out.println("NOT FOUND!");
-        else
-            book.deleteContact(name);
-
-        System.out.println(book.toString());
+        while (true) {
+            System.out.println("\n\nWelcome to Address Book Program");
+            System.out.println("1. Add Contact");
+            System.out.println("2. Edit Contact");
+            System.out.println("3. Delete Contact");
+            System.out.println("4. Print Address Book");
+            System.out.print("Your choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice) {
+                case 1:
+                    book.addContact(readContact(sc));
+                    break;
+                case 2:
+                    System.out.println("Enter name to edit: ");
+                    String name = sc.nextLine();
+                    if (book.searchByName(name) == -1)
+                        System.out.println("NOT FOUND!");
+                    else
+                        book.editContact(name, readContact(sc));
+                    break;
+                case 3:
+                    System.out.println("Enter name to delete: ");
+                    name = sc.nextLine();
+                    if (book.searchByName(name) == -1)
+                        System.out.println("NOT FOUND!");
+                    else
+                        book.deleteContact(name);
+                    break;
+                case 4:
+                    System.out.println(book.toString());
+                    break;
+                default:
+                    System.out.println("Invalid Choice!");
+                    break;
+            }
+        }
 
     }
 }
