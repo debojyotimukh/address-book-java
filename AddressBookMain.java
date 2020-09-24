@@ -1,4 +1,4 @@
-class Contacts{
+class Contacts {
     private String fName;
     private String lName;
     private String address;
@@ -84,10 +84,9 @@ class Contacts{
         this.email = email;
     }
 
-    
 }
 
-public class AddressBookMain{
+public class AddressBookMain {
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book Program");
     }
