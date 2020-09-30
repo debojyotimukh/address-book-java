@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
 
-class Contacts {
+class Contact {
     private String fName;
     private String lName;
     private String address;
@@ -14,8 +14,8 @@ class Contacts {
     private String phone;
     private String email;
 
-    public Contacts(String fName, String lName, String address, String city, String state, String zip, String phone,
-            String email) {
+    public Contact(String fName, String lName, String address, String city, String state, String zip, String phone,
+                   String email) {
         this.fName = fName;
         this.lName = lName;
         this.address = address;
@@ -43,20 +43,20 @@ class Contacts {
 }
 
 class AddressBookService {
-    private ArrayList<Contacts> contactList = new ArrayList<>();
+    private ArrayList<Contact> contactList = new ArrayList<>();
 
-    public void addContact(Contacts contact) {
+    public void addContact(Contact contact) {
         contactList.add(contact);
     }
 
     public int searchByName(String name) {
-        for (Contacts contact : contactList)
+        for (Contact contact : contactList)
             if (contact.getfName().equalsIgnoreCase(name))
                 return contactList.indexOf(contact);
         return -1;
     }
 
-    public boolean editContact(String name, Contacts modified) {
+    public boolean editContact(String name, Contact modified) {
         int index = searchByName(name);
         if (index == -1)
             return false;
@@ -78,15 +78,15 @@ class AddressBookService {
             return "No contacts found!";
 
         StringBuilder sBuilder = new StringBuilder();
-        for (Contacts contacts : contactList)
-            sBuilder.append(contacts.toString() + "\n");
+        for (Contact contacts : contactList)
+            sBuilder.append(contacts.toString()).append("\n");
 
         return sBuilder.toString();
     }
 }
 
 public class AddressBookMain {
-    private static Contacts readContact(Scanner sc) {
+    private static Contact readContact(Scanner sc) {
         System.out.println("FIRST NAME: ");
         String fName = sc.nextLine();
         System.out.println("LAST NAME: ");
@@ -104,7 +104,7 @@ public class AddressBookMain {
         System.out.println("EMAIL ADDRESS: ");
         String email = sc.nextLine();
 
-        return new Contacts(fName, lName, address, city, state, zip, phone, email);
+        return new Contact(fName, lName, address, city, state, zip, phone, email);
     }
 
     private static void addressBookOps(AddressBookService book, Scanner sc) {
