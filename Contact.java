@@ -1,5 +1,5 @@
 public class Contact {
-    private String fName;
+    private final String fName;
     private final String lName;
     private final String address;
     private final String city;

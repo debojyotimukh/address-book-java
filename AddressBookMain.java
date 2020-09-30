@@ -35,32 +35,58 @@ public class AddressBookMain {
             int choice = sc.nextInt();
             sc.nextLine();
             switch (choice) {
-                case 1:
+                case 1: //Add
                     if (book.addContact(readContact(sc)))
                         System.out.println("Contact Added!");
                     else System.out.println("Contact already exists");
                     break;
-                case 2:
+
+                case 2: //Edit
                     System.out.println("Enter name to edit: ");
                     String name = sc.nextLine();
-                    if (book.searchByName(name) == -1)
+                    List<Contact> sameName = book.searchByName(name);
+                    if (sameName.isEmpty())
                         System.out.println("NOT FOUND!");
-                    else
-                        book.editContact(name, readContact(sc));
+                    else if (sameName.size() == 1) {
+                        book.editContact(sameName.get(0), readContact(sc));
+                        System.out.println("Contact Modified!");
+                    }
+                    else {
+                        sameName.forEach(x -> System.out.println(sameName.indexOf(x) + "  " + x.toString()));
+                        System.out.println("Enter an index to edit: ");
+                        int index=sc.nextInt();
+                        sc.nextLine();
+                        book.editContact(sameName.get(index), readContact(sc));
+                        System.out.println("Contact Modified!");
+                    }
                     break;
-                case 3:
+
+                case 3: //Delete
                     System.out.println("Enter name to delete: ");
                     name = sc.nextLine();
-                    if (book.searchByName(name) == -1)
+                    /*List<Contact>*/
+                    sameName = book.searchByName(name);
+
+                    if (sameName.isEmpty())
                         System.out.println("NOT FOUND!");
-                    else
-                        book.deleteContact(name);
+                    else if (sameName.size() == 1) {
+                        book.deleteContact(sameName.get(0));
+                        System.out.println("Contact Deleted!");
+                    } else {
+                        sameName.forEach(x -> System.out.println(sameName.indexOf(x) + "  " + x.toString()));
+                        System.out.println("Enter an index to delete: ");
+                        book.deleteContact(sameName.get(sc.nextInt()));
+                        System.out.println("Contact Deleted!");
+                    }
                     break;
-                case 4:
+
+                case 4: //Print
                     System.out.println(book.toString());
                     break;
-                case 5:
+
+                case 5: //Quit
                     return;
+
                 default:
                     System.out.println("Invalid Choice!");
                     break;
@@ -92,7 +118,7 @@ public class AddressBookMain {
                     addressBookOps(library.get(bookName), sc);
                     break;
                 case 2:
-                    System.out.println("Availble books are: ");
+                    System.out.println("Available books are: ");
                     for (Enumeration<String> i = library.keys(); i.hasMoreElements(); ) {
                         System.out.println(i.nextElement() + ",");
                     }
