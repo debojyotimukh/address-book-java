@@ -39,9 +39,7 @@ public class AddressBookService {
             return "No contacts found!";
 
         StringBuilder sBuilder = new StringBuilder();
-        for (Contact contacts : contactList)
-            sBuilder.append(contacts.toString()).append("\n");
-
+        contactList.forEach(sBuilder::append);
         return sBuilder.toString();
     }
 }
