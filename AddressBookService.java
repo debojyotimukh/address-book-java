@@ -1,6 +1,11 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -50,6 +55,10 @@ public class AddressBookService {
 
     public Map<String, List<Contact>> stateMap() {
         return contactList.stream().collect(groupingBy(Contact::getState));
+    }
+
+    public List<Contact> sortBy(Function<? super Contact, ? extends String> key) {
+        return contactList.stream().sorted(Comparator.comparing(key)).collect(Collectors.toList());
     }
 
     public boolean editContact(Contact current, Contact modified) {

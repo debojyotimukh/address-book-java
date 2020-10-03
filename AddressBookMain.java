@@ -3,7 +3,6 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class AddressBookMain {
-    //private static final Dictionary<String, AddressBookService> library = new Hashtable<>();
     private static final List<AddressBookService> library = new ArrayList<>();
     private static final Scanner sc = new Scanner(System.in);
 

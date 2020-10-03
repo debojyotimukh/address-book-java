@@ -25,13 +25,13 @@ public class Utility {
         return new Contact(fName, lName, address, city, state, zip, phone, email);
     }
 
-    public static void printConditionally(List<Contact> contacts, Predicate<Contact> predicate){
+    public static void printConditionally(List<Contact> contacts, Predicate<Contact> predicate) {
         //Header
         System.out.println("Index\tFirst Name\tLast Name\tAddress\tCity\tState\tZip\tPhone\tEmail");
         System.out.println("====================================================================================");
-        for(Contact contact:contacts)
-            if(predicate.test(contact))
-                System.out.println(contacts.indexOf(contact)+"\t"+contact.toString());
+        for (Contact contact : contacts)
+            if (predicate.test(contact))
+                System.out.println(contacts.indexOf(contact) + "\t" + contact.toString());
 
         System.out.println("====================================================================================");
 
