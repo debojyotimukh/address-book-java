@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public class AddressBookService {
     private final ArrayList<Contact> contactList = new ArrayList<>();
@@ -39,6 +42,14 @@ public class AddressBookService {
         return contactList.stream().
                 filter(person -> person.getState().equalsIgnoreCase(state)).
                 collect(Collectors.toList());
+    }
+
+    public Map<String, List<Contact>> cityMap() {
+        return contactList.stream().collect(groupingBy(Contact::getCity));
+    }
+
+    public Map<String, List<Contact>> stateMap() {
+        return contactList.stream().collect(groupingBy(Contact::getState));
     }
 
     public boolean editContact(Contact current, Contact modified) {
