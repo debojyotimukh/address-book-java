@@ -1,3 +1,5 @@
+package com.capgemini.training.java;
+
 import java.util.*;
 
 public class AddressBookMain {

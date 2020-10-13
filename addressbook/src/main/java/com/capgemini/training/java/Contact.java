@@ -1,3 +1,5 @@
+package com.capgemini.training.java;
+
 public class Contact {
     private final String fName;
     private final String lName;
