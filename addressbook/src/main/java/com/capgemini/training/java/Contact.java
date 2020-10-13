@@ -1,14 +1,24 @@
 package com.capgemini.training.java;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class Contact {
-    private final String fName;
-    private final String lName;
-    private final String address;
-    private final String city;
-    private final String state;
-    private final String zip;
-    private final String phone;
-    private final String email;
+    @CsvBindByName(column = "fname", required = true)
+    private String fName;
+    @CsvBindByName(column = "lname", required = true)
+    private String lName;
+    @CsvBindByName(column = "address", required = true)
+    private String address;
+    @CsvBindByName(column = "city", required = true)
+    private String city;
+    @CsvBindByName(column = "state", required = true)
+    private String state;
+    @CsvBindByName(column = "zip", required = true)
+    private String zip;
+    @CsvBindByName(column = "phone", required = true)
+    private String phone;
+    @CsvBindByName(column = "email", required = true)
+    private String email;
 
     public Contact(String fName, String lName, String address, String city, String state, String zip, String phone,
                    String email) {
