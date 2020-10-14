@@ -1,11 +1,7 @@
 package com.capgemini.training.java;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 public class AddressBookCLI {
     private static int addressPrompt(Scanner sc) {
@@ -118,12 +114,8 @@ public class AddressBookCLI {
                 case 6: // Quit
                     try {
                         book.close();
-                    } catch (CsvDataTypeMismatchException e) {
-                        e.printStackTrace();
-                    } catch (CsvRequiredFieldEmptyException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (CsvIOException e) {
+                        e.getMessage();
                     }
                     return;
 

@@ -1,6 +1,5 @@
 package com.capgemini.training.java;
 
-import java.io.IOException;
 import java.util.*;
 
 public class AddressBookMain {
@@ -125,7 +124,11 @@ public class AddressBookMain {
                     System.out.println("Available books are: ");
                     library.forEach(book -> System.out.println(book.getBookName() + " ,"));
                     System.out.println("Open Book: ");
-                    openBook(sc.nextLine());
+                    try {
+                        openBook(sc.nextLine());
+                    } catch (CsvIOException e) {
+                        e.getMessage();
+                    }
                     break;
                 case 3: // delete
                     System.out.println("Enter name to delete: ");
@@ -152,14 +155,10 @@ public class AddressBookMain {
         library.remove(locateIndex(name));
     }
 
-    private static void openBook(String bookName) {
+    private static void openBook(String bookName) throws CsvIOException {
         System.out.println("Current: " + bookName);
         AddressBookService addressBookService = library.get(locateIndex(bookName));
-        try {
-            addressBookService.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addressBookService.load();
         AddressBookCLI.run(addressBookService, sc);
     }
 

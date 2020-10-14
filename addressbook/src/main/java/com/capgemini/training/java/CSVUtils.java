@@ -1,6 +1,5 @@
 package com.capgemini.training.java;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -14,7 +13,7 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 public class CSVUtils {
-    public static List<Contact> loadContactsFromCSV(final String filepath) throws IOException {
+    public static List<Contact> loadContactsFromCSV(final String filepath) throws CsvIOException {
         List<Contact> contactList = null;
 
         try (Reader reader = Files.newBufferedReader(Paths.get(filepath));) {
@@ -23,13 +22,13 @@ public class CSVUtils {
             contactList = csvToBean.parse();
 
         } catch (Exception e) {
-            // TODO: handle exception
+            throw new CsvIOException("Failed to read from CSV!");
         }
 
         return contactList;
     }
 
-    public static void writeContactsInCSV(List<Contact> contacts, final String filepath) {
+    public static void writeContactsInCSV(List<Contact> contacts, final String filepath) throws CsvIOException {
 
         try (Writer writer = Files.newBufferedWriter(Paths.get(filepath));) {
 
@@ -38,7 +37,7 @@ public class CSVUtils {
             beanToCsv.write(contacts);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CsvIOException("Failed to write in CSV!");
         }
 
     }

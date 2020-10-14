@@ -7,31 +7,26 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-
 import static java.util.stream.Collectors.groupingBy;
 
-import java.io.IOException;
-
 public class AddressBookService {
-    private  List<Contact> contactList = new ArrayList<>();
-    private  String bookName;
-  
-    public void load() throws IOException {
+    private List<Contact> contactList = new ArrayList<>();
+    private String bookName;
+
+    public void load() throws CsvIOException {
         String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        String JSON_FILE_PATH="./addressbook/dat/" + bookName + ".json";
-        contactList=  CSVUtils.loadContactsFromCSV(CSV_FILE_PATH);
-        contactList=  JSONUtils.loadContactsFromJSON(JSON_FILE_PATH);
+        String JSON_FILE_PATH = "./addressbook/dat/" + bookName + ".json";
+        contactList = CSVUtils.loadContactsFromCSV(CSV_FILE_PATH);
+        contactList = JSONUtils.loadContactsFromJSON(JSON_FILE_PATH);
     }
 
-    public void close() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+    public void close() throws CsvIOException {
         String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        String JSON_FILE_PATH="./addressbook/dat/" + bookName + ".json";
+        String JSON_FILE_PATH = "./addressbook/dat/" + bookName + ".json";
         CSVUtils.writeContactsInCSV(contactList, CSV_FILE_PATH);
         JSONUtils.writeContactsInJSON(contactList, JSON_FILE_PATH);
 
-    } 
+    }
 
     public String getBookName() {
         return bookName;
@@ -47,21 +42,18 @@ public class AddressBookService {
     }
 
     public List<Contact> searchByName(String name) {
-        return contactList.stream().
-                filter(person -> person.getfName().equalsIgnoreCase(name)).
-                collect(Collectors.toList());
+        return contactList.stream().filter(person -> person.getfName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
     }
 
     public List<Contact> searchByCity(String city) {
-        return contactList.stream().
-                filter(person -> person.getCity().equalsIgnoreCase(city)).
-                collect(Collectors.toList());
+        return contactList.stream().filter(person -> person.getCity().equalsIgnoreCase(city))
+                .collect(Collectors.toList());
     }
 
     public List<Contact> searchByState(String state) {
-        return contactList.stream().
-                filter(person -> person.getState().equalsIgnoreCase(state)).
-                collect(Collectors.toList());
+        return contactList.stream().filter(person -> person.getState().equalsIgnoreCase(state))
+                .collect(Collectors.toList());
     }
 
     public Map<String, List<Contact>> cityMap() {
