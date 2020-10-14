@@ -7,18 +7,29 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+
 import static java.util.stream.Collectors.groupingBy;
+
+import java.io.IOException;
 
 public class AddressBookService {
     private final ArrayList<Contact> contactList = new ArrayList<>();
-    private String bookName;
+    private  String bookName;
+  
+    public void load() throws IOException {
+        String FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
+        CSVUtils.loadContactsFromCSV(FILE_PATH);
+    }
+
+    public void close() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
+        String FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
+        CSVUtils.writeContactsInCSV(contactList, FILE_PATH);
+    } 
 
     public String getBookName() {
         return bookName;
-    }
-
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
     }
 
     public boolean addContact(Contact contact) {
@@ -81,5 +92,9 @@ public class AddressBookService {
         StringBuilder sBuilder = new StringBuilder();
         contactList.forEach(sBuilder::append);
         return sBuilder.toString();
+    }
+
+    public AddressBookService(String bookName) {
+        this.bookName = bookName;
     }
 }

@@ -1,5 +1,6 @@
 package com.capgemini.training.java;
 
+import java.io.IOException;
 import java.util.*;
 
 public class AddressBookMain {
@@ -106,8 +107,7 @@ public class AddressBookMain {
     }
 
     private static void addBook(String bookName) {
-        AddressBookService addressBookService = new AddressBookService();
-        addressBookService.setBookName(bookName);
+        AddressBookService addressBookService = new AddressBookService(bookName);
         library.add(addressBookService);
         AddressBookCLI.run(addressBookService, sc);
     }
@@ -115,33 +115,30 @@ public class AddressBookMain {
     public static void main(String[] args) {
         while (true) {
             switch (welcomePrompt()) {
-                case 1: //add
+                case 1: // add
                     System.out.println("Name of new address book: ");
                     String bookName = sc.next();
                     sc.nextLine();
                     addBook(bookName);
                     break;
-                case 2: //select
+                case 2: // select
                     System.out.println("Available books are: ");
                     library.forEach(book -> System.out.println(book.getBookName() + " ,"));
                     System.out.println("Open Book: ");
-                    String name = sc.nextLine();
-                    System.out.println("Current: " + name);
-                    AddressBookCLI.run(library.get(locateIndex(name)), sc);
+                    openBook(sc.nextLine());
                     break;
-                case 3: //delete
+                case 3: // delete
                     System.out.println("Enter name to delete: ");
-                    name = sc.nextLine();
-                    library.remove(locateIndex(name));
+                    deleteBook(sc.nextLine());
                     break;
                 case 4:
                     searchByPrompt();
                     break;
 
-                case 5: //count by city/state
+                case 5: // count by city/state
                     countPrompt();
                     break;
-                case 6: //quit
+                case 6: // quit
                     sc.close();
                     return;
                 default:
@@ -149,6 +146,21 @@ public class AddressBookMain {
                     break;
             }
         }
+    }
+
+    private static void deleteBook(String name) {
+        library.remove(locateIndex(name));
+    }
+
+    private static void openBook(String bookName) {
+        System.out.println("Current: " + bookName);
+        AddressBookService addressBookService = library.get(locateIndex(bookName));
+        try {
+            addressBookService.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        AddressBookCLI.run(addressBookService, sc);
     }
 
 

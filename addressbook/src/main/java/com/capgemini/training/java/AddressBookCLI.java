@@ -1,7 +1,11 @@
 package com.capgemini.training.java;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 
 public class AddressBookCLI {
     private static int addressPrompt(Scanner sc) {
@@ -88,29 +92,39 @@ public class AddressBookCLI {
     public static void run(AddressBookService book, Scanner sc) {
         while (true) {
             switch (addressPrompt(sc)) {
-                case 1: //Add
+                case 1: // Add
                     if (book.addContact(Utility.readContact(sc)))
                         System.out.println("Contact Added!");
-                    else System.out.println("Contact already exists");
+                    else
+                        System.out.println("Contact already exists");
                     break;
 
-                case 2: //Edit
+                case 2: // Edit
                     System.out.println("Enter name to edit: ");
                     editContact(book, sc, sc.nextLine());
                     break;
 
-                case 3: //Delete
+                case 3: // Delete
                     System.out.println("Enter name to delete: ");
                     deleteContact(book, sc, sc.nextLine());
                     break;
 
-                case 4: //Print
+                case 4: // Print
                     System.out.println(book.toString());
                     break;
-                case 5:
+                case 5: // sort
                     sortByPrompt(sc, book);
                     break;
-                case 6: //Quit
+                case 6: // Quit
+                    try {
+                        book.close();
+                    } catch (CsvDataTypeMismatchException e) {
+                        e.printStackTrace();
+                    } catch (CsvRequiredFieldEmptyException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     return;
 
                 default:

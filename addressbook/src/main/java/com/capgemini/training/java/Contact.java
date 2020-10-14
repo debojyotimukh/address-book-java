@@ -3,25 +3,27 @@ package com.capgemini.training.java;
 import com.opencsv.bean.CsvBindByName;
 
 public class Contact {
-    @CsvBindByName(column = "fname", required = true)
+    @CsvBindByName(column = "First name")
     private String fName;
-    @CsvBindByName(column = "lname", required = true)
+    @CsvBindByName(column = "Lastst name")
     private String lName;
-    @CsvBindByName(column = "address", required = true)
+    @CsvBindByName(column = "Address")
     private String address;
-    @CsvBindByName(column = "city", required = true)
+    @CsvBindByName(column = "City")
     private String city;
-    @CsvBindByName(column = "state", required = true)
+    @CsvBindByName(column = "State")
     private String state;
-    @CsvBindByName(column = "zip", required = true)
+    @CsvBindByName(column = "Zip")
     private String zip;
-    @CsvBindByName(column = "phone", required = true)
+    @CsvBindByName(column = "Phone")
     private String phone;
-    @CsvBindByName(column = "email", required = true)
+    @CsvBindByName(column = "Email")
     private String email;
 
+    
+
     public Contact(String fName, String lName, String address, String city, String state, String zip, String phone,
-                   String email) {
+            String email) {
         this.fName = fName;
         this.lName = lName;
         this.address = address;
@@ -91,8 +93,11 @@ public class Contact {
 
     @Override
     public String toString() {
-        return fName + "\t" + lName + "\t" + address + "\t" + city + "\t" + state + "\t" + zip + "\t" + phone + "\t"
-                + email;
+        return "Contact [address=" + address + ", city=" + city + ", email=" + email + ", fName=" + fName + ", lName="
+                + lName + ", phone=" + phone + ", state=" + state + ", zip=" + zip + "]";
+    }
+
+    public Contact() {
     }
 
 }
