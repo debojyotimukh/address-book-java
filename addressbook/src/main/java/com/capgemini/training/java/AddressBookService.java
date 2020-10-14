@@ -15,17 +15,22 @@ import static java.util.stream.Collectors.groupingBy;
 import java.io.IOException;
 
 public class AddressBookService {
-    private final ArrayList<Contact> contactList = new ArrayList<>();
+    private  List<Contact> contactList = new ArrayList<>();
     private  String bookName;
   
     public void load() throws IOException {
-        String FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        CSVUtils.loadContactsFromCSV(FILE_PATH);
+        String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
+        String JSON_FILE_PATH="./addressbook/dat/" + bookName + ".json";
+        contactList=  CSVUtils.loadContactsFromCSV(CSV_FILE_PATH);
+        contactList=  JSONUtils.loadContactsFromJSON(JSON_FILE_PATH);
     }
 
     public void close() throws CsvDataTypeMismatchException, CsvRequiredFieldEmptyException, IOException {
-        String FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        CSVUtils.writeContactsInCSV(contactList, FILE_PATH);
+        String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
+        String JSON_FILE_PATH="./addressbook/dat/" + bookName + ".json";
+        CSVUtils.writeContactsInCSV(contactList, CSV_FILE_PATH);
+        JSONUtils.writeContactsInJSON(contactList, JSON_FILE_PATH);
+
     } 
 
     public String getBookName() {
