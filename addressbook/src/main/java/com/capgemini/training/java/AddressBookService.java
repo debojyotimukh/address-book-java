@@ -13,6 +13,10 @@ public class AddressBookService {
     private List<Contact> contactList = new ArrayList<>();
     private String bookName;
 
+    public AddressBookService(String bookName) {
+        this.bookName = bookName;
+    }
+
     public void load() throws CsvIOException {
         String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
         String JSON_FILE_PATH = "./addressbook/dat/" + bookName + ".json";
@@ -91,7 +95,4 @@ public class AddressBookService {
         return sBuilder.toString();
     }
 
-    public AddressBookService(String bookName) {
-        this.bookName = bookName;
-    }
 }
