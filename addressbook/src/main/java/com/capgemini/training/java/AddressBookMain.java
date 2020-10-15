@@ -3,10 +3,10 @@ package com.capgemini.training.java;
 import java.util.*;
 
 public class AddressBookMain {
-    private static final List<AddressBookService> library = new ArrayList<>();
-    private static final Scanner sc = new Scanner(System.in);
+    private List<AddressBookService> library = new ArrayList<>();
+    private Scanner sc = null;
 
-    private static Map<String, List<Contact>> consolidatedCityMap() {
+    private Map<String, List<Contact>> consolidatedCityMap() {
         Map<String, List<Contact>> cityMap = new HashMap<>();
         for (AddressBookService book : library) {
             book.cityMap().forEach((key, value) -> cityMap.merge(key, value, (vo, vn) -> {
@@ -18,7 +18,7 @@ public class AddressBookMain {
         return cityMap;
     }
 
-    private static Map<String, List<Contact>> consolidatedStateMap() {
+    private Map<String, List<Contact>> consolidatedStateMap() {
         Map<String, List<Contact>> stateMap = new HashMap<>();
         for (AddressBookService book : library) {
             book.stateMap().forEach((key, value) -> stateMap.merge(key, value, (vo, vn) -> {
@@ -30,28 +30,31 @@ public class AddressBookMain {
         return stateMap;
     }
 
-    private static int locateIndex(String name) {
+    private int locateIndex(String name) {
         for (int i = 0; i < library.size(); i++)
             if (library.get(i).getBookName().equals(name))
                 return i;
         return -1;
     }
 
-    private static int welcomePrompt() {
-        System.out.println("\n\nWelcome to Address Book Program");
-        System.out.println("1. New Address Book");
-        System.out.println("2. Select Book");
-        System.out.println("3. Delete Book");
-        System.out.println("4. Search");
-        System.out.println("5. Count");
-        System.out.println("6. Quit");
-        System.out.print("Your choice: ");
-        int choice = AddressBookMain.sc.nextInt();
-        AddressBookMain.sc.nextLine();
-        return choice;
+    private void addBook(String bookName) {
+        AddressBookService addressBookService = new AddressBookService(bookName);
+        library.add(addressBookService);
+        AddressBookCLI.addressPrompt(addressBookService, sc);
     }
 
-    private static void searchByPrompt() {
+    private void openBook(String bookName) throws CsvIOException {
+        System.out.println("Current: " + bookName);
+        AddressBookService addressBookService = library.get(locateIndex(bookName));
+        addressBookService.load();
+        AddressBookCLI.addressPrompt(addressBookService, sc);
+    }
+
+    private void deleteBook(String name) {
+        library.remove(locateIndex(name));
+    }
+
+    private void searchByPrompt() {
         System.out.println("1. By name");
         System.out.println("2. By city");
         System.out.println("3. By state");
@@ -60,22 +63,22 @@ public class AddressBookMain {
         int choice = sc.nextInt();
         sc.nextLine();
         switch (choice) {
-            case 1:
+            case 1: // by name
                 System.out.println("Enter name: ");
                 String name = sc.nextLine();
                 library.forEach(book -> book.searchByName(name).forEach(System.out::println));
                 break;
-            case 2:
+            case 2: // by city
                 System.out.println("Enter city: ");
                 String city = sc.nextLine();
                 library.forEach(book -> book.searchByCity(city).forEach(System.out::println));
                 break;
-            case 3:
+            case 3: // by state
                 System.out.println("Enter state: ");
                 String state = sc.nextLine();
                 library.forEach(book -> book.searchByState(state).forEach(System.out::println));
                 break;
-            case 4:
+            case 4: // back
                 return;
             default:
                 System.out.println("INVALID CHOICE!");
@@ -83,7 +86,7 @@ public class AddressBookMain {
 
     }
 
-    private static void countPrompt() {
+    private void countPrompt() {
         System.out.println("1. By city");
         System.out.println("2. By state");
         System.out.println("3. Back");
@@ -92,28 +95,35 @@ public class AddressBookMain {
         sc.nextLine();
 
         switch (choice) {
-            case 1:
+            case 1: // by city
                 consolidatedCityMap().forEach((k, v) -> System.out.println(k + "\t" + v.size()));
                 break;
-            case 2:
+            case 2: // by state
                 consolidatedStateMap().forEach((k, v) -> System.out.println(k + "\t" + v.size()));
                 break;
-            case 3:
+            case 3: // back
                 return;
             default:
                 System.out.println("INVALID CHOICE!");
         }
     }
 
-    private static void addBook(String bookName) {
-        AddressBookService addressBookService = new AddressBookService(bookName);
-        library.add(addressBookService);
-        AddressBookCLI.run(addressBookService, sc);
-    }
+    public void welcomePrompt(Scanner scanner) {
 
-    public static void main(String[] args) {
         while (true) {
-            switch (welcomePrompt()) {
+            System.out.println("\n\nWelcome to Address Book Program");
+            System.out.println("1. New Address Book");
+            System.out.println("2. Select Book");
+            System.out.println("3. Delete Book");
+            System.out.println("4. Search");
+            System.out.println("5. Count");
+            System.out.println("6. Quit");
+            System.out.print("Your choice: ");
+
+            this.sc = scanner;
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
                 case 1: // add
                     System.out.println("Name of new address book: ");
                     String bookName = sc.next();
@@ -126,6 +136,7 @@ public class AddressBookMain {
                     System.out.println("Open Book: ");
                     try {
                         openBook(sc.nextLine());
+                        break;
                     } catch (CsvIOException e) {
                         e.getMessage();
                     }
@@ -134,33 +145,27 @@ public class AddressBookMain {
                     System.out.println("Enter name to delete: ");
                     deleteBook(sc.nextLine());
                     break;
-                case 4:
+                case 4: // search
                     searchByPrompt();
                     break;
-
                 case 5: // count by city/state
                     countPrompt();
                     break;
                 case 6: // quit
-                    sc.close();
                     return;
                 default:
                     System.out.println("Invalid Choice!");
                     break;
             }
         }
+
     }
 
-    private static void deleteBook(String name) {
-        library.remove(locateIndex(name));
+    public static void main(String[] args) {
+        AddressBookMain addressBookMain = new AddressBookMain();
+        Scanner sc = new Scanner(System.in);
+        addressBookMain.welcomePrompt(sc);
+        sc.close();
     }
-
-    private static void openBook(String bookName) throws CsvIOException {
-        System.out.println("Current: " + bookName);
-        AddressBookService addressBookService = library.get(locateIndex(bookName));
-        addressBookService.load();
-        AddressBookCLI.run(addressBookService, sc);
-    }
-
 
 }
