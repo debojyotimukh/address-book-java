@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 public class JSONUtils {
     public static List<Contact> loadContactsFromJSON(final String filepath) {
@@ -18,7 +19,7 @@ public class JSONUtils {
             contactList = Arrays.asList(contacts);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new JsonIOException("Cannot load contact from " + filepath);
         }
         return contactList;
     }
@@ -30,7 +31,7 @@ public class JSONUtils {
             writer.write(gson.toJson(contactList));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new JsonIOException("Cannot write contact in " + filepath);
         }
     }
 
