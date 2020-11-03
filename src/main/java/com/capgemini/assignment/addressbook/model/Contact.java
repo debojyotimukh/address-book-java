@@ -1,4 +1,4 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.model;
 
 import com.opencsv.bean.CsvBindByName;
 
@@ -20,7 +20,8 @@ public class Contact {
     @CsvBindByName(column = "Email")
     private String email;
 
-    
+    public Contact() {
+    }
 
     public Contact(String fName, String lName, String address, String city, String state, String zip, String phone,
             String email) {
@@ -94,10 +95,7 @@ public class Contact {
     @Override
     public String toString() {
         return "Contact [address=" + address + ", city=" + city + ", email=" + email + ", fName=" + fName + ", lName="
-                + lName + ", phone=" + phone + ", state=" + state + ", zip=" + zip + "]";
-    }
-
-    public Contact() {
+                + lName + ", phone=" + phone + ", state=" + state + ", zip=" + zip + "]\n";
     }
 
 }

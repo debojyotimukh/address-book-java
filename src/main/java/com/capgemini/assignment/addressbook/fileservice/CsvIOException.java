@@ -1,4 +1,4 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.fileservice;
 
 public class CsvIOException extends Throwable{
 

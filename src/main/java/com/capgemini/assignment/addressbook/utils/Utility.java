@@ -1,10 +1,16 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
+import com.capgemini.assignment.addressbook.model.Contact;
+
 public class Utility {
+
+    private Utility() {
+    }
 
     public static Contact readContact(Scanner sc) {
         System.out.println("FIRST NAME: ");
@@ -28,7 +34,7 @@ public class Utility {
     }
 
     public static void printConditionally(List<Contact> contacts, Predicate<Contact> predicate) {
-        //Header
+        // Header
         System.out.println("Index\tFirst Name\tLast Name\tAddress\tCity\tState\tZip\tPhone\tEmail");
         System.out.println("====================================================================================");
         for (Contact contact : contacts)
@@ -37,6 +43,14 @@ public class Utility {
 
         System.out.println("====================================================================================");
 
+    }
+
+    public static <K, V> void printMap(Map<K, V> map) {
+        map.forEach((k, v) -> System.out.println(k.toString() + "    " + v.toString()));
+    }
+
+    public static <T> void printList(List<T> list) {
+        list.forEach(System.out::println);
     }
 
 }

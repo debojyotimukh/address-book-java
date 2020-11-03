@@ -1,4 +1,4 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.fileservice;
 
 import java.io.Reader;
 import java.io.Writer;
@@ -12,7 +12,14 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
-public class CSVUtils {
+public class CSVService implements IAddressBookIOService<T> {
+
+    private String filename;
+
+    public CSVService(String filename) {
+        this.filename = filename;
+    }
+
     public static List<Contact> loadContactsFromCSV(final String filepath) throws CsvIOException {
         List<Contact> contactList = null;
 
@@ -41,4 +48,6 @@ public class CSVUtils {
         }
 
     }
+
+
 }

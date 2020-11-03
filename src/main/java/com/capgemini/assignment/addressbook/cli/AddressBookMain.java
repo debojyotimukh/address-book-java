@@ -1,58 +1,13 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.cli;
 
 import java.util.*;
 
+import com.capgemini.assignment.addressbook.model.AddressLibrary;
+import com.capgemini.assignment.addressbook.utils.Utility;
+
 public class AddressBookMain {
-    private List<AddressBookService> library = new ArrayList<>();
+    private AddressLibrary library = new AddressLibrary();
     private Scanner sc = null;
-
-    private Map<String, List<Contact>> consolidatedCityMap() {
-        Map<String, List<Contact>> cityMap = new HashMap<>();
-        for (AddressBookService book : library) {
-            book.cityMap().forEach((key, value) -> cityMap.merge(key, value, (vo, vn) -> {
-                vo.addAll(vn);
-                return vo;
-            }));
-        }
-
-        return cityMap;
-    }
-
-    private Map<String, List<Contact>> consolidatedStateMap() {
-        Map<String, List<Contact>> stateMap = new HashMap<>();
-        for (AddressBookService book : library) {
-            book.stateMap().forEach((key, value) -> stateMap.merge(key, value, (vo, vn) -> {
-                vo.addAll(vn);
-                return vo;
-            }));
-        }
-
-        return stateMap;
-    }
-
-    private int locateIndex(String name) {
-        for (int i = 0; i < library.size(); i++)
-            if (library.get(i).getBookName().equals(name))
-                return i;
-        return -1;
-    }
-
-    private void addBook(String bookName) {
-        AddressBookService addressBookService = new AddressBookService(bookName);
-        library.add(addressBookService);
-        AddressBookCLI.addressPrompt(addressBookService, sc);
-    }
-
-    private void openBook(String bookName) throws CsvIOException {
-        System.out.println("Current: " + bookName);
-        AddressBookService addressBookService = library.get(locateIndex(bookName));
-        addressBookService.load();
-        AddressBookCLI.addressPrompt(addressBookService, sc);
-    }
-
-    private void deleteBook(String name) {
-        library.remove(locateIndex(name));
-    }
 
     private void searchByPrompt() {
         System.out.println("1. By name");
@@ -66,17 +21,17 @@ public class AddressBookMain {
             case 1: // by name
                 System.out.println("Enter name: ");
                 String name = sc.nextLine();
-                library.forEach(book -> book.searchByName(name).forEach(System.out::println));
+                Utility.printList(library.searchByName(name));
                 break;
             case 2: // by city
                 System.out.println("Enter city: ");
                 String city = sc.nextLine();
-                library.forEach(book -> book.searchByCity(city).forEach(System.out::println));
+                Utility.printList(library.searchByCity(city));
                 break;
             case 3: // by state
                 System.out.println("Enter state: ");
                 String state = sc.nextLine();
-                library.forEach(book -> book.searchByState(state).forEach(System.out::println));
+                Utility.printList(library.searchByState(state));
                 break;
             case 4: // back
                 return;
@@ -96,10 +51,10 @@ public class AddressBookMain {
 
         switch (choice) {
             case 1: // by city
-                consolidatedCityMap().forEach((k, v) -> System.out.println(k + "\t" + v.size()));
+                Utility.printMap(library.countByCity());
                 break;
             case 2: // by state
-                consolidatedStateMap().forEach((k, v) -> System.out.println(k + "\t" + v.size()));
+                Utility.printMap(library.countByState());
                 break;
             case 3: // back
                 return;
@@ -128,22 +83,18 @@ public class AddressBookMain {
                     System.out.println("Name of new address book: ");
                     String bookName = sc.next();
                     sc.nextLine();
-                    addBook(bookName);
+                    library.newBook(bookName);
                     break;
                 case 2: // select
                     System.out.println("Available books are: ");
-                    library.forEach(book -> System.out.println(book.getBookName() + " ,"));
+                    Utility.printList(library.getBookNames());
                     System.out.println("Open Book: ");
-                    try {
-                        openBook(sc.nextLine());
-                        break;
-                    } catch (CsvIOException e) {
-                        e.getMessage();
-                    }
+                    bookName = sc.nextLine();
+                    AddressBookCLI.addressPrompt(library.openBook(bookName), sc);
                     break;
                 case 3: // delete
                     System.out.println("Enter name to delete: ");
-                    deleteBook(sc.nextLine());
+                    library.deleteBook(sc.nextLine());
                     break;
                 case 4: // search
                     searchByPrompt();

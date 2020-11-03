@@ -1,4 +1,6 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.model;
+
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -7,35 +9,80 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-
-public class AddressBookService {
-    private List<Contact> contactList = new ArrayList<>();
+public class AddressBook {
+    private List<Contact> contactList;
     private String bookName;
 
-    public AddressBookService(String bookName) {
+    public AddressBook(String bookName) {
+        this.contactList = new ArrayList<>();
         this.bookName = bookName;
-    }
-
-    public void load() throws CsvIOException {
-        String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        String JSON_FILE_PATH = "./addressbook/dat/" + bookName + ".json";
-        contactList = CSVUtils.loadContactsFromCSV(CSV_FILE_PATH);
-        contactList = JSONUtils.loadContactsFromJSON(JSON_FILE_PATH);
-    }
-
-    public void close() throws CsvIOException {
-        String CSV_FILE_PATH = "./addressbook/dat/" + bookName + ".csv";
-        String JSON_FILE_PATH = "./addressbook/dat/" + bookName + ".json";
-        CSVUtils.writeContactsInCSV(contactList, CSV_FILE_PATH);
-        JSONUtils.writeContactsInJSON(contactList, JSON_FILE_PATH);
-
     }
 
     public String getBookName() {
         return bookName;
     }
 
+    /**
+     * Search address book by name
+     * 
+     * @param name
+     * @return
+     */
+    public List<Contact> searchByName(String name) {
+        return contactList.stream().filter(person -> person.getfName().equalsIgnoreCase(name))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Search address book by city
+     * 
+     * @param city
+     * @return
+     */
+    public List<Contact> searchByCity(String city) {
+        return contactList.stream().filter(person -> person.getCity().equalsIgnoreCase(city))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Search address book by state
+     * 
+     * @param state
+     * @return
+     */
+    public List<Contact> searchByState(String state) {
+        return contactList.stream().filter(person -> person.getState().equalsIgnoreCase(state))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a map of city-contactList
+     * 
+     * @return
+     */
+    public Map<String, List<Contact>> cityMap() {
+        return contactList.stream().collect(groupingBy(Contact::getCity));
+    }
+
+    /**
+     * Returns a map of state-contactList
+     * 
+     * @return
+     */
+    public Map<String, List<Contact>> stateMap() {
+        return contactList.stream().collect(groupingBy(Contact::getState));
+    }
+
+    public List<Contact> sortBy(Function<? super Contact, ? extends String> key) {
+        return contactList.stream().sorted(Comparator.comparing(key)).collect(Collectors.toList());
+    }
+
+    /**
+     * Add new contact in address book
+     * 
+     * @param contact
+     * @return
+     */
     public boolean addContact(Contact contact) {
         List<Contact> filteredByFName = searchByName(contact.getfName());
         for (Contact sameName : filteredByFName)
@@ -45,33 +92,13 @@ public class AddressBookService {
         return true;
     }
 
-    public List<Contact> searchByName(String name) {
-        return contactList.stream().filter(person -> person.getfName().equalsIgnoreCase(name))
-                .collect(Collectors.toList());
-    }
-
-    public List<Contact> searchByCity(String city) {
-        return contactList.stream().filter(person -> person.getCity().equalsIgnoreCase(city))
-                .collect(Collectors.toList());
-    }
-
-    public List<Contact> searchByState(String state) {
-        return contactList.stream().filter(person -> person.getState().equalsIgnoreCase(state))
-                .collect(Collectors.toList());
-    }
-
-    public Map<String, List<Contact>> cityMap() {
-        return contactList.stream().collect(groupingBy(Contact::getCity));
-    }
-
-    public Map<String, List<Contact>> stateMap() {
-        return contactList.stream().collect(groupingBy(Contact::getState));
-    }
-
-    public List<Contact> sortBy(Function<? super Contact, ? extends String> key) {
-        return contactList.stream().sorted(Comparator.comparing(key)).collect(Collectors.toList());
-    }
-
+    /**
+     * edit new contact in address book
+     * 
+     * @param current  current contact
+     * @param modified contact
+     * @return
+     */
     public boolean editContact(Contact current, Contact modified) {
         if (!contactList.contains(current))
             return false;
@@ -80,6 +107,12 @@ public class AddressBookService {
         return true;
     }
 
+    /**
+     * delete contact from address book
+     * 
+     * @param contact
+     * @return
+     */
     public boolean deleteContact(Contact contact) {
         contactList.remove(contact);
         return true;

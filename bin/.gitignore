@@ -1,0 +1,7 @@
+.*
+!/.gitignore
+*.class
+*.swp
+*.iml
+out/
+target/

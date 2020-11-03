@@ -1,11 +1,15 @@
-package com.capgemini.training.java;
+package com.capgemini.assignment.addressbook.cli;
 
 import java.util.List;
 import java.util.Scanner;
 
+import com.capgemini.assignment.addressbook.model.AddressBook;
+import com.capgemini.assignment.addressbook.model.Contact;
+import com.capgemini.assignment.addressbook.utils.Utility;
+
 public class AddressBookCLI {
 
-    private static void deleteContact(AddressBookService book, Scanner sc, String name) {
+    private static void deleteContact(AddressBook book, Scanner sc, String name) {
 
         List<Contact> sameName = book.searchByName(name);
         if (sameName.isEmpty()) {
@@ -22,7 +26,7 @@ public class AddressBookCLI {
         }
     }
 
-    private static void editContact(AddressBookService book, Scanner sc, String name) {
+    private static void editContact(AddressBook book, Scanner sc, String name) {
 
         List<Contact> sameName = book.searchByName(name);
         if (sameName.isEmpty())
@@ -40,7 +44,7 @@ public class AddressBookCLI {
         }
     }
 
-    private static void sortByPrompt(Scanner sc, AddressBookService addressBookService) {
+    private static void sortByPrompt(Scanner sc, AddressBook AddressBook) {
         System.out.println("1. By first name");
         System.out.println("2. By last name");
         System.out.println("3. By city");
@@ -53,19 +57,19 @@ public class AddressBookCLI {
         sc.nextLine();
         switch (choice) {
             case 1:
-                addressBookService.sortBy(Contact::getfName).forEach(System.out::println);
+                AddressBook.sortBy(Contact::getfName).forEach(System.out::println);
                 break;
             case 2:
-                addressBookService.sortBy(Contact::getlName).forEach(System.out::println);
+                AddressBook.sortBy(Contact::getlName).forEach(System.out::println);
                 break;
             case 3:
-                addressBookService.sortBy(Contact::getCity).forEach(System.out::println);
+                AddressBook.sortBy(Contact::getCity).forEach(System.out::println);
                 break;
             case 4:
-                addressBookService.sortBy(Contact::getState).forEach(System.out::println);
+                AddressBook.sortBy(Contact::getState).forEach(System.out::println);
                 break;
             case 5:
-                addressBookService.sortBy(Contact::getZip).forEach(System.out::println);
+                AddressBook.sortBy(Contact::getZip).forEach(System.out::println);
                 break;
             case 6:
                 return;
@@ -74,7 +78,7 @@ public class AddressBookCLI {
         }
     }
 
-    public static void addressPrompt(AddressBookService book, Scanner sc) {
+    public static void addressPrompt(AddressBook book, Scanner sc) {
 
         while (true) {
 
@@ -110,11 +114,6 @@ public class AddressBookCLI {
                     sortByPrompt(sc, book);
                     break;
                 case 6: // Quit
-                    try {
-                        book.close();
-                    } catch (CsvIOException e) {
-                        e.getMessage();
-                    }
                     return;
                 default:
                     System.out.println("Invalid Choice!");
