@@ -5,9 +5,21 @@ import java.util.Map;
 
 public interface IAddressLibrary {
 
+    public List<String> getBookNames();
+
     public void newBook(String bookName);
 
     public void deleteBook(String bookName);
+
+    public String bookString(String bookName);
+
+    public void closeLibrary();
+
+    public void addContact(String bookName, Contact contact);
+
+    public void editContact(String bookName, String contactName, Contact modified);
+
+    public void deleteContact(String bookName, String contactName);
 
     public List<Contact> searchByName(String name);
 

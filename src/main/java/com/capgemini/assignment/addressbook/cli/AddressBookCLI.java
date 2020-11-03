@@ -82,7 +82,7 @@ public class AddressBookCLI {
 
         while (true) {
 
-            System.out.println("\n\nInside: " + book.getBookName());
+            //System.out.println("\n\nInside: " + book.getBookName());
             System.out.println("1. Add Contact");
             System.out.println("2. Edit Contact");
             System.out.println("3. Delete Contact");

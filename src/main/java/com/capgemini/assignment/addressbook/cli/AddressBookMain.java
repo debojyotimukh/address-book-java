@@ -103,6 +103,7 @@ public class AddressBookMain {
                     countPrompt();
                     break;
                 case 6: // quit
+                    library.closeLibrary();
                     return;
                 default:
                     System.out.println("Invalid Choice!");

@@ -18,8 +18,15 @@ public class AddressBook {
         this.bookName = bookName;
     }
 
+    public AddressBook(List<Contact> contactList){
+        this.contactList=contactList;
+    }
+
     public String getBookName() {
         return bookName;
+    }
+    public List<Contact> getList(){
+        return this.contactList;
     }
 
     /**

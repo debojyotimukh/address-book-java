@@ -5,18 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.capgemini.assignment.addressbook.fileservice.FileIOHandler;
+import com.capgemini.assignment.addressbook.fileservice.IAddressBookIOService;
+import com.capgemini.assignment.addressbook.fileservice.FileIOHandler.IO_TYPE;
+import com.google.gson.reflect.TypeToken;
 
 public class AddressLibrary implements IAddressLibrary {
     private Map<String, AddressBook> library;
+    private IAddressBookIOService ioService;
 
     public AddressLibrary() {
+        ioService = FileIOHandler.getIOHandler(IO_TYPE.JSON, "AddressBookDB.json");
         this.library = new HashMap<>();
+        updateList();
     }
 
     @Override
     public void newBook(String bookName) {
         AddressBook addressBook = new AddressBook(bookName);
         library.put(bookName, addressBook);
+        updateJson();
     }
 
     public AddressBook openBook(String bookName) {
@@ -24,8 +34,41 @@ public class AddressLibrary implements IAddressLibrary {
     }
 
     @Override
+    public void closeLibrary() {
+        updateJson();
+    }
+
+    @Override
     public void deleteBook(String name) {
         library.remove(name);
+        updateJson();
+    }
+
+    @Override
+    public String bookString(String bookName) {
+        return library.get(bookName).toString();
+    }
+
+    @Override
+    public void addContact(String bookName, Contact contact) {
+        library.get(bookName).addContact(contact);
+        updateJson();
+    }
+
+    @Override
+    public void editContact(String bookName, String contactName, Contact modified) {
+        library.get(bookName).searchByName(contactName).stream().findFirst().ifPresent(contact -> contact = modified);
+        updateJson();
+
+    }
+
+    @Override
+    public void deleteContact(String bookName, String contactName) {
+        library.get(bookName).searchByName(contactName).stream().findFirst().ifPresent(contact -> {
+            library.get(bookName).deleteContact(contact);
+        });
+        updateJson();
+
     }
 
     private Map<String, List<Contact>> consolidatedCityMap() {
@@ -87,9 +130,25 @@ public class AddressLibrary implements IAddressLibrary {
         return count;
     }
 
-	public List<String> getBookNames() {
+    @Override
+    public List<String> getBookNames() {
         Set<String> names = this.library.keySet();
-		return new ArrayList<String>(names);
-	}
+        return new ArrayList<String>(names);
+    }
+
+    public void updateJson() {
+        ioService.writeContacts(this.library.entrySet().stream()
+                .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getList())));
+    }
+
+    public void updateList() {
+        Map<String, List<Contact>> contactListMap = ioService.readContacts("AddressBookDB.json",
+                new TypeToken<Map<String, List<Contact>>>() {
+                }.getType());
+
+        contactListMap.forEach((k, v) -> {
+            this.library.put(k, new AddressBook(v));
+        });
+    }
 
 }
