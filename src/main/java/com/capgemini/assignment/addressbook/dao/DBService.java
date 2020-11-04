@@ -36,12 +36,6 @@ public class DBService {
         return INSTANCE;
     }
 
-    // private static final DBService INSTANCE = new DBService();
-
-    // public static DBService getInstance() {
-    // return INSTANCE;
-    // }
-
     private Connection connection = null;
 
     private DBService() {
@@ -133,7 +127,7 @@ public class DBService {
             }
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("book id");
+
             e.printStackTrace();
         }
 
@@ -160,7 +154,13 @@ public class DBService {
         }
     }
 
-    public boolean editContact(String name, Contact modified, String bookName) {
+    public boolean editContact(String name, Contact modified, String bookName) throws DBException {
+        try {
+            deleteContact(bookName, name);
+            addContact(modified, bookName);
+        } catch (DBException e) {
+            throw new DBException("Failed to edit Contact: " + e.getMessage());
+        }
         return false;
     }
 

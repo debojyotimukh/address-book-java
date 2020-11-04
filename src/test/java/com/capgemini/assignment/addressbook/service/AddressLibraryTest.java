@@ -17,7 +17,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 /**
- * Unit test for Address Library .
+ * Unit tests for Address Library .
  */
 public class AddressLibraryTest {
     public AddressLibrary library;
@@ -28,24 +28,6 @@ public class AddressLibraryTest {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 3000;
 
-    }
-
-    @Test
-    public void givenADatabase_whenRetrievedDataFromDatabase_returnsCountofDataReceived() {
-        /*
-         * ABD.readDirectory(IOService.DB_IO); int n = ABD.getCountOFEntries();
-         * ABD.printDirectory(IOService.CONSOLE_IO); Assert.assertEquals(12, n);
-         */
-    }
-
-    @Test
-    public void givenADatabase_whenUpdatedDataForAContact_returnsIsSyncWithDatabase() {
-        /*
-         * AddressBookDirectory ABD = new AddressBookDirectory();
-         * ABD.readDirectory(IOService.DB_IO); ABD.updateContactInDatabase("Ram",
-         * "Khan", "89/1 dharamshala haman road"); boolean b =
-         * ABD.isSyncWithDatabase("Ram", "Khan"); Assert.assertTrue(b);
-         */
     }
 
     @Test
@@ -110,7 +92,7 @@ public class AddressLibraryTest {
 
     @Test
     public void givenExistingContact_whenUpdated_shouldReturn200Response() {
-        
+
         Contact contact = new Contact("Test", "Contact", "From rest Assured", "Howrah", "West Bengal", "456784",
                 "987645334", "new.contact@json.com");
 
@@ -123,9 +105,5 @@ public class AddressLibraryTest {
         library.updateFromJson();
         Assert.assertEquals(200, response.getStatusCode());
     }
-
-    
-
-
 
 }

@@ -95,8 +95,13 @@ public class AddressLibrary implements IAddressLibrary {
     @Override
     public void editContact(String bookName, String contactName, Contact modified) {
         library.get(bookName).searchByName(contactName).stream().findFirst().ifPresent(contact -> contact = modified);
-        dbService.editContact(contactName, modified, bookName);
-        updateToJson();
+        try {
+            dbService.editContact(contactName, modified, bookName);
+            updateToJson();
+        } catch (DBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -209,7 +214,7 @@ public class AddressLibrary implements IAddressLibrary {
             };
             Thread thread = new Thread(task, contact.getfName());
             thread.start();
-            System.out.println("In thread "+Thread.currentThread().getName());
+            System.out.println("In thread " + Thread.currentThread().getName());
         });
         while (contactAdditionStatus.containsValue(false)) {
 
@@ -225,17 +230,18 @@ public class AddressLibrary implements IAddressLibrary {
         updateToJson();
     }
 
-    public void updateFromDB(){
+    public void updateFromDB() {
         Map<String, AddressBook> fetchdBooks = dbService.fetchAllAddressBooks();
-        this.library=fetchdBooks;
+        this.library = fetchdBooks;
     }
 
-    public boolean isSyncWithDB(){
+    public boolean isSyncWithDB() {
         Map<String, AddressBook> fetchdBooks = dbService.fetchAllAddressBooks();
-        if(!fetchdBooks.keySet().equals(this.library.keySet()))
+        if (!fetchdBooks.keySet().equals(this.library.keySet()))
             return false;
 
-        Map<String, Boolean> valueEquals = fetchdBooks.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue().equals(this.library.get(e.getKey()))));
+        Map<String, Boolean> valueEquals = fetchdBooks.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().equals(this.library.get(e.getKey()))));
 
         return !valueEquals.containsValue(false);
     }
