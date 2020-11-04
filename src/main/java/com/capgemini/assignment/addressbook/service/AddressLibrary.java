@@ -209,10 +209,12 @@ public class AddressLibrary implements IAddressLibrary {
             };
             Thread thread = new Thread(task, contact.getfName());
             thread.start();
+            System.out.println("In thread "+Thread.currentThread().getName());
         });
         while (contactAdditionStatus.containsValue(false)) {
 
             try {
+                Thread.yield();
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
