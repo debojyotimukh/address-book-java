@@ -1,1 +1,98 @@
-{"test":[{"id":1,"fName":"Bina","lName":"Kamal","address":"sadar natin laane","city":"Bangalore","state":"Karnataka","zip":"489025","phone":"7277282884","email":"etgsgshs@gmail.com"},{"id":1,"fName":"Patil","lName":"Kamal","address":"sadar natin laane","city":"Bangalore","state":"Karnataka","zip":"489025","phone":"7277282884","email":"etgsgshs@gmail.com"},{"id":1,"fName":"Binayak","lName":"Kamal","address":"sadar natin laane","city":"Bangalore","state":"Karnataka","zip":"489025","phone":"7277282884","email":"etgsgshs@gmail.com"}],"work":[],"friend":[{"id":4,"fName":"Sourav","lName":"Mondal","address":"34,ghatal market Rd.","city":"Ghatal","state":"West Bengal","zip":"876453","phone":"7898673758","email":"mondal.sourav@gmail.com"},{"id":5,"fName":"Sayantan","lName":"Mondal","address":"56 jafar shah marg","city":"Chennai","state":"Tamilnadu","zip":"456789","phone":"8976456734","email":"sayantan007@gmail.com"}],"personal":[],"home":[{"id":1,"fName":"Mallika","lName":"Mukherjee","address":"kali kumar mukherjee lane","city":"Howrah","state":"West Bengal","zip":"711102","phone":"1234567890","email":"mallika.m@gmail.com"},{"id":2,"fName":"Debabrata","lName":"Mukherjee","address":"kali kumar mukherjee lane","city":"Howrah","state":"West Bengal","zip":"711102","phone":"2345678910","email":"dmukherjee@outlook.com"},{"id":3,"fName":"Debmalya","lName":"Mukherjee","address":"Akbar Rd","city":"Gurugram","state":"Haryana","zip":"5678923","phone":"5678903467","email":"debmalyamukh@yahoo.com"}]}
+{
+  "test": [
+    {
+      "id": 45,
+      "fName": "Bina",
+      "lName": "Kamal",
+      "address": "sadar natin laane",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip": "489025",
+      "phone": "7277282884",
+      "email": "etgsgshs@gmail.com"
+    },
+    {
+      "id": 46,
+      "fName": "Patil",
+      "lName": "Kamal",
+      "address": "sadar natin laane",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip": "489025",
+      "phone": "7277282884",
+      "email": "etgsgshs@gmail.com"
+    },
+    {
+      "id": 47,
+      "fName": "Binayak",
+      "lName": "Kamal",
+      "address": "sadar natin laane",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip": "489025",
+      "phone": "7277282884",
+      "email": "etgsgshs@gmail.com"
+    }
+  ],
+  "work": [],
+  "friend": [
+    {
+      "id": 4,
+      "fName": "Sourav",
+      "lName": "Mondal",
+      "address": "34,ghatal market Rd.",
+      "city": "Ghatal",
+      "state": "West Bengal",
+      "zip": "876453",
+      "phone": "7898673758",
+      "email": "mondal.sourav@gmail.com"
+    },
+    {
+      "id": 5,
+      "fName": "Sayantan",
+      "lName": "Mondal",
+      "address": "56 jafar shah marg",
+      "city": "Chennai",
+      "state": "Tamilnadu",
+      "zip": "456789",
+      "phone": "8976456734",
+      "email": "sayantan007@gmail.com"
+    }
+  ],
+  "personal": [],
+  "home": [
+    {
+      "id": 1,
+      "fName": "Mallika",
+      "lName": "Mukherjee",
+      "address": "kali kumar mukherjee lane",
+      "city": "Howrah",
+      "state": "West Bengal",
+      "zip": "711102",
+      "phone": "1234567890",
+      "email": "mallika.m@gmail.com"
+    },
+    {
+      "id": 2,
+      "fName": "Debabrata",
+      "lName": "Mukherjee",
+      "address": "kali kumar mukherjee lane",
+      "city": "Howrah",
+      "state": "West Bengal",
+      "zip": "711102",
+      "phone": "2345678910",
+      "email": "dmukherjee@outlook.com"
+    },
+    {
+      "id": 3,
+      "fName": "Debmalya",
+      "lName": "Mukherjee",
+      "address": "Akbar Rd",
+      "city": "Gurugram",
+      "state": "Haryana",
+      "zip": "5678923",
+      "phone": "5678903467",
+      "email": "debmalyamukh@yahoo.com"
+    }
+  ]
+}

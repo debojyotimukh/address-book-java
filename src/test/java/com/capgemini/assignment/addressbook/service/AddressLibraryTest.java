@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.capgemini.assignment.addressbook.model.Contact;
+import com.google.gson.Gson;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 /**
  * Unit test for Address Library .
@@ -20,6 +25,9 @@ public class AddressLibraryTest {
     @Before
     public void init() {
         library = new AddressLibrary();
+        RestAssured.baseURI = "http://localhost";
+        RestAssured.port = 3000;
+
     }
 
     @Test
@@ -42,17 +50,17 @@ public class AddressLibraryTest {
 
     @Test
     public void givenADatabase_whenAddedAConatact_returnsisSyncWithDatabase() {
-        library.addContact("friend", new Contact("Bina", "Kamal", "sadar natin laane", "Bangalore", "Karnataka", "489025",
-        "7277282884", "etgsgshs@gmail.com"));
-        boolean result=library.isSyncWithDB();
+        library.addContact("friend", new Contact("Bina", "Kamal", "sadar natin laane", "Bangalore", "Karnataka",
+                "489025", "7277282884", "etgsgshs@gmail.com"));
+        boolean result = library.isSyncWithDB();
         Assert.assertTrue(result);
     }
 
     @Test
     public void givenADatabase_whenAddedMultipleConatact_returnsCountOFContacs() {
         List<Contact> contacts = new ArrayList<>();
-        contacts.add(new Contact("Bina", "Kamal", "sadar natin laane", "Bangalore", "Karnataka", "489025",
-                "7277282884", "etgsgshs@gmail.com"));
+        contacts.add(new Contact("Bina", "Kamal", "sadar natin laane", "Bangalore", "Karnataka", "489025", "7277282884",
+                "etgsgshs@gmail.com"));
         contacts.add(new Contact("Binayak", "Kamal", "sadar natin laane", "Bangalore", "Karnataka", "489025",
                 "7277282884", "etgsgshs@gmail.com"));
         contacts.add(new Contact("Patil", "Kamal", "sadar natin laane", "Bangalore", "Karnataka", "489025",
@@ -66,63 +74,58 @@ public class AddressLibraryTest {
 
     }
 
-    @Test
-    public void givenADatabase_whenRetrievedData_givesADBjsonFile() {
-        /*
-         * AddressBookDirectory ABD = new AddressBookDirectory();
-         * ABD.readDirectory(IOService.DB_IO); ABD.setNewAddressBook(); try { FileWriter
-         * writer = new FileWriter("./contactDB.json"); Gson gson = new
-         * GsonBuilder().setPrettyPrinting().create(); String str =
-         * gson.toJson(ABD.getNewAddressBook()); writer.write(str); writer.close(); }
-         * catch (IOException e) { e.printStackTrace(); }
-         */
+    private Response addToJSONServer(Contact contact) {
+        String contactJson = new Gson().toJson(contact);
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
+        request.body(contactJson);
+        return request.post("work/");
     }
 
-    /*
-     * @Before public void setup() { RestAssured.baseURI = "http://localhost";
-     * RestAssured.port = 3000; }
-     * 
-     * public Map<String, List<Contact>> getEmployee() { List<String> booklist =
-     * Arrays.asList(new String[] { "Family", "Friend", "Profession" }); Map<String,
-     * Boolean> statusCodes = new HashMap<>(); Map<String, List<Contact>> directory
-     * = new HashMap<>(); booklist.forEach(nameOfBook -> {
-     * statusCodes.put(nameOfBook, false); Response response = RestAssured.get("/" +
-     * nameOfBook); System.out.println("Employee Payroll entries in Json Server :" +
-     * nameOfBook + " \n" + response.asString()); directory.put(nameOfBook, new
-     * Gson().fromJson(response.asString(), new TypeToken<List<Contact>>() {
-     * }.getType())); statusCodes.put(nameOfBook, true); }); return directory; }
-     */
+    @Test
+    public void givenNewContact_whenAddedToJSONServer_shouldReturn201Response() {
+        Contact contact = new Contact(54, "Test", "Contact", "From rest Assured", "Howrah", "West Bengal", "456784",
+                "987645334", "new.contact@json.com");
+        Response response = addToJSONServer(contact);
+        Assert.assertEquals(201, response.getStatusCode());
+        library.updateFromJson();
+        int entries = library.openBook("work").getCount();
+        Assert.assertEquals(1, entries);
+    }
 
-    /*
-     * private Response addEmployeeToJsonServer(Contact contact, String bookname) {
-     * String contactJson = new
-     * GsonBuilder().setPrettyPrinting().create().toJson(contact);
-     * RequestSpecification request = RestAssured.given();
-     * request.header("Content-type", "application/json");
-     * request.body(contactJson); return request.post("/" + bookname); }
-     * 
-     * @Test@Ignore public void
-     * givenContactDetailsInJsonServer_whenRetrieved_shouldReturnNoOfCounts() {
-     * Map<String, List<Contact>> data = getEmployee(); AddressBookDirectory dir =
-     * new AddressBookDirectory(); dir.setNewAddressBook(data); int entries =
-     * dir.getCountOFEntries(); dir.printDirectory(IOService.CONSOLE_IO);
-     * Assert.assertEquals(12, entries); }
-     */
-    /*
-     * @Test@Ignore public void
-     * givenContactDetailsInJsonServer_whenAddedAConatct_shouldReturnNoOfCountsAndResponseCode
-     * () { Map<String, List<Contact>> data = getEmployee(); AddressBookDirectory
-     * dir = new AddressBookDirectory(); dir.setNewAddressBook(data); Contact
-     * contact = new Contact("Bina", "Kamal", "sadar natin laane", "Bangalore",
-     * "Karnataka", "489025", "7277282884", "etgsgshs@gmail.com", "2020-10-29");
-     * Response response = addEmployeeToJsonServer(contact, "Profession"); int
-     * statusCode = response.getStatusCode(); Assert.assertEquals(201, statusCode);
-     * Contact newAddedContact = new Gson().fromJson(response.asString(),
-     * Contact.class);
-     * dir.getAddressBookDirectory().get("Profession").getContact().add(
-     * newAddedContact);
-     * dir.getNewAddressBook().get("Profession").add(newAddedContact);
-     * dir.printDirectory(IOService.CONSOLE_IO); int entries =
-     * dir.getCountOFEntries(); Assert.assertEquals(13, entries); }
-     */
+    @Test
+    public void givenExistingContact_whenDeleted_shouldReturn200Response() {
+        Contact contact = new Contact(54, "Test", "Contact", "From rest Assured", "Howrah", "West Bengal", "456784",
+                "987645334", "new.contact@json.com");
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
+
+        Response response = request.delete("work/" + contact.getId());
+        Assert.assertEquals(200, response.getStatusCode());
+        library.updateFromJson();
+        int entries = library.openBook("work").getCount();
+        Assert.assertEquals(0, entries);
+
+    }
+
+    @Test
+    public void givenExistingContact_whenUpdated_shouldReturn200Response() {
+        
+        Contact contact = new Contact("Test", "Contact", "From rest Assured", "Howrah", "West Bengal", "456784",
+                "987645334", "new.contact@json.com");
+
+        String contactJson = new Gson().toJson(contact);
+        RequestSpecification request = RestAssured.given();
+        request.header("Content-Type", "application/json");
+        request.body(contactJson);
+
+        Response response = request.put("test/" + 45);
+        library.updateFromJson();
+        Assert.assertEquals(200, response.getStatusCode());
+    }
+
+    
+
+
+
 }
