@@ -3,8 +3,8 @@ package com.capgemini.assignment.addressbook.cli;
 import java.util.List;
 import java.util.Scanner;
 
-import com.capgemini.assignment.addressbook.model.AddressBook;
 import com.capgemini.assignment.addressbook.model.Contact;
+import com.capgemini.assignment.addressbook.service.AddressBook;
 import com.capgemini.assignment.addressbook.utils.Utility;
 
 public class AddressBookCLI {

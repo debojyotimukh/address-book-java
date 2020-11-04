@@ -1,4 +1,4 @@
-package com.capgemini.assignment.addressbook.model;
+package com.capgemini.assignment.addressbook.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,26 +7,46 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.capgemini.assignment.addressbook.dao.DBException;
+import com.capgemini.assignment.addressbook.dao.DBService;
 import com.capgemini.assignment.addressbook.fileservice.FileIOHandler;
 import com.capgemini.assignment.addressbook.fileservice.IAddressBookIOService;
 import com.capgemini.assignment.addressbook.fileservice.FileIOHandler.IO_TYPE;
+import com.capgemini.assignment.addressbook.model.Contact;
 import com.google.gson.reflect.TypeToken;
 
 public class AddressLibrary implements IAddressLibrary {
+    private static final AddressLibrary INSTANCE = new AddressLibrary();
+
+    public static AddressLibrary getInstance() {
+        return INSTANCE;
+    }
+
     private Map<String, AddressBook> library;
     private IAddressBookIOService ioService;
+    private DBService dbService = null;
 
     public AddressLibrary() {
         ioService = FileIOHandler.getIOHandler(IO_TYPE.JSON, "AddressBookDB.json");
+        dbService = DBService.getInstance();
         this.library = new HashMap<>();
-        updateList();
+        updateFromDB();
+        updateToJson();
+        // updateFromJson();
     }
 
     @Override
     public void newBook(String bookName) {
         AddressBook addressBook = new AddressBook(bookName);
         library.put(bookName, addressBook);
-        updateJson();
+        try {
+            dbService.newBook(bookName);
+            updateToJson();
+        } catch (DBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     public AddressBook openBook(String bookName) {
@@ -35,13 +55,20 @@ public class AddressLibrary implements IAddressLibrary {
 
     @Override
     public void closeLibrary() {
-        updateJson();
+        updateToJson();
     }
 
     @Override
     public void deleteBook(String name) {
         library.remove(name);
-        updateJson();
+        try {
+            dbService.deleteBook(name);
+            updateToJson();
+        } catch (DBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -51,14 +78,25 @@ public class AddressLibrary implements IAddressLibrary {
 
     @Override
     public void addContact(String bookName, Contact contact) {
-        library.get(bookName).addContact(contact);
-        updateJson();
+        try {
+            synchronized (AddressLibrary.class) {
+                int id = dbService.addContact(contact, bookName);
+                contact.setId(id);
+            }
+            library.get(bookName).addContact(contact);
+            updateToJson();
+        } catch (DBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void editContact(String bookName, String contactName, Contact modified) {
         library.get(bookName).searchByName(contactName).stream().findFirst().ifPresent(contact -> contact = modified);
-        updateJson();
+        dbService.editContact(contactName, modified, bookName);
+        updateToJson();
 
     }
 
@@ -67,7 +105,13 @@ public class AddressLibrary implements IAddressLibrary {
         library.get(bookName).searchByName(contactName).stream().findFirst().ifPresent(contact -> {
             library.get(bookName).deleteContact(contact);
         });
-        updateJson();
+        try {
+            dbService.deleteContact(bookName, contactName);
+            updateToJson();
+        } catch (DBException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 
@@ -136,12 +180,14 @@ public class AddressLibrary implements IAddressLibrary {
         return new ArrayList<String>(names);
     }
 
-    public void updateJson() {
+    public void updateToJson() {
+
         ioService.writeContacts(this.library.entrySet().stream()
                 .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue().getList())));
+
     }
 
-    public void updateList() {
+    public void updateFromJson() {
         Map<String, List<Contact>> contactListMap = ioService.readContacts("AddressBookDB.json",
                 new TypeToken<Map<String, List<Contact>>>() {
                 }.getType());
@@ -149,6 +195,47 @@ public class AddressLibrary implements IAddressLibrary {
         contactListMap.forEach((k, v) -> {
             this.library.put(k, new AddressBook(v));
         });
+    }
+
+    public void addContacts(List<Contact> contacts, String bookName) {
+        Map<Integer, Boolean> contactAdditionStatus = new HashMap<>();
+        contacts.forEach(contact -> {
+            Runnable task = () -> {
+                contactAdditionStatus.put(contact.hashCode(), false);
+                System.out.println("Contact being added " + Thread.currentThread().getName());
+                this.addContact(bookName, contact);
+                contactAdditionStatus.put(contact.hashCode(), true);
+                System.out.println("Contact added " + Thread.currentThread().getName());
+            };
+            Thread thread = new Thread(task, contact.getfName());
+            thread.start();
+        });
+        while (contactAdditionStatus.containsValue(false)) {
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        System.out.println("done");
+        updateToJson();
+    }
+
+    public void updateFromDB(){
+        Map<String, AddressBook> fetchdBooks = dbService.fetchAllAddressBooks();
+        this.library=fetchdBooks;
+    }
+
+    public boolean isSyncWithDB(){
+        Map<String, AddressBook> fetchdBooks = dbService.fetchAllAddressBooks();
+        if(!fetchdBooks.keySet().equals(this.library.keySet()))
+            return false;
+
+        Map<String, Boolean> valueEquals = fetchdBooks.entrySet().stream().collect(Collectors.toMap(e->e.getKey(), e->e.getValue().equals(this.library.get(e.getKey()))));
+
+        return !valueEquals.containsValue(false);
     }
 
 }

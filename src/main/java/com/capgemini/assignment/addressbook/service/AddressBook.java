@@ -1,4 +1,4 @@
-package com.capgemini.assignment.addressbook.model;
+package com.capgemini.assignment.addressbook.service;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.capgemini.assignment.addressbook.model.Contact;
 
 public class AddressBook {
     private List<Contact> contactList;
@@ -133,6 +135,41 @@ public class AddressBook {
         StringBuilder sBuilder = new StringBuilder();
         contactList.forEach(sBuilder::append);
         return sBuilder.toString();
+    }
+
+	public int getCount() {
+        return this.contactList.size();
+	}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((bookName == null) ? 0 : bookName.hashCode());
+        result = prime * result + ((contactList == null) ? 0 : contactList.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AddressBook other = (AddressBook) obj;
+        if (bookName == null) {
+            if (other.bookName != null)
+                return false;
+        } else if (!bookName.equals(other.bookName))
+            return false;
+        if (contactList == null) {
+            if (other.contactList != null)
+                return false;
+        } else if (!contactList.equals(other.contactList))
+            return false;
+        return true;
     }
 
 }

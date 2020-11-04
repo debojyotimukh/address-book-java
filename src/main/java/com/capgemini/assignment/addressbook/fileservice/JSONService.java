@@ -7,11 +7,9 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.capgemini.assignment.addressbook.model.AddressBook;
 import com.capgemini.assignment.addressbook.model.Contact;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;

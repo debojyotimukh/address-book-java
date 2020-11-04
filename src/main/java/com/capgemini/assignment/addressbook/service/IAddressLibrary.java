@@ -1,7 +1,9 @@
-package com.capgemini.assignment.addressbook.model;
+package com.capgemini.assignment.addressbook.service;
 
 import java.util.List;
 import java.util.Map;
+
+import com.capgemini.assignment.addressbook.model.Contact;
 
 public interface IAddressLibrary {
 

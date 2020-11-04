@@ -3,5 +3,7 @@
 *.class
 *.swp
 *.iml
+*.properties
 out/
 target/
+dat/

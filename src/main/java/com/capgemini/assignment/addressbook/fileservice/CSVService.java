@@ -2,17 +2,20 @@ package com.capgemini.assignment.addressbook.fileservice;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
+import com.capgemini.assignment.addressbook.model.Contact;
 import com.opencsv.CSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
-public class CSVService implements IAddressBookIOService<T> {
+public class CSVService implements IAddressBookIOService {
 
     private String filename;
 
@@ -46,6 +49,18 @@ public class CSVService implements IAddressBookIOService<T> {
         } catch (Exception e) {
             throw new CsvIOException("Failed to write in CSV!");
         }
+
+    }
+
+    @Override
+    public <K, V> Map<K, V> readContacts(String filepath, Type clazz) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public <K, V> void writeContacts(Map<K, V> contacts) {
+        // TODO Auto-generated method stub
 
     }
 

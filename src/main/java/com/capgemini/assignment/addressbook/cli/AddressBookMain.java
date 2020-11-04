@@ -2,11 +2,11 @@ package com.capgemini.assignment.addressbook.cli;
 
 import java.util.*;
 
-import com.capgemini.assignment.addressbook.model.AddressLibrary;
+import com.capgemini.assignment.addressbook.service.AddressLibrary;
 import com.capgemini.assignment.addressbook.utils.Utility;
 
 public class AddressBookMain {
-    private AddressLibrary library = new AddressLibrary();
+    private AddressLibrary library = AddressLibrary.getInstance();
     private Scanner sc = null;
 
     private void searchByPrompt() {
