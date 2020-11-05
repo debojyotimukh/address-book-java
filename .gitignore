@@ -32,5 +32,6 @@ buildNumber.properties
 bin/
 dat/
 db.properties
+AddressBookDB.json
 
 
